@@ -1,13 +1,12 @@
 const Koa = require('koa');
 const app = new Koa();
+const router = require('koa-router');
 const views = require('koa-views');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
-
-const index = require('./routes/index');
-const users = require('./routes/users');
+const requireDirectory = require('require-directory');
 
 // error handler
 onerror(app);
@@ -37,8 +36,13 @@ app.use(async (ctx, next) => {
 });
 
 // routes
-app.use(index.routes(), index.allowedMethods());
-app.use(users.routes(), users.allowedMethods());
+requireDirectory(module, './routes', {
+  visit: obj => {
+    if (obj instanceof router) {
+      app.use(obj.routes());
+    }
+  },
+});
 
 // error-handling
 app.on('error', (err, ctx) => {
