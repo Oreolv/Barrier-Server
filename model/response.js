@@ -17,9 +17,13 @@ class SuccessModel extends BaseModel {
 }
 
 class ErrorModel extends BaseModel {
-  constructor(message, data) {
+  constructor(message, data, errcode) {
     super(message, data);
-    this.errcode = -1;
+    if (!errcode) {
+      this.errcode = 500;
+      return;
+    }
+    this.errcode = errcode;
   }
 }
 
