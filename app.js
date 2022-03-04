@@ -7,7 +7,9 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const requireDirectory = require('require-directory');
-
+const koajwt = require('koa-jwt');
+const { jwtSecret } = require('./config/secret');
+const token = require('./middlewares/token');
 // error handler
 onerror(app);
 
@@ -24,6 +26,16 @@ app.use(require('koa-static')(__dirname + '/public'));
 app.use(
   views(__dirname + '/views', {
     extension: 'pug',
+  })
+);
+
+app.use(token());
+
+app.use(
+  koajwt({
+    secret: jwtSecret,
+  }).unless({
+    path: [/\/users\/login/],
   })
 );
 
