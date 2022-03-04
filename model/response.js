@@ -1,5 +1,5 @@
 class BaseModel {
-  constructor(data, message) {
+  constructor(message, data) {
     if (data) {
       this.data = data;
     }
@@ -10,15 +10,17 @@ class BaseModel {
 }
 
 class SuccessModel extends BaseModel {
-  constructor(data, message) {
-    super(data, message);
+  constructor(message, data) {
+    super(message, data);
     this.errcode = 0;
   }
 }
 
 class ErrorModel extends BaseModel {
-  constructor(data, message) {
-    super(data, message);
+  constructor(message, data) {
+    super(message, data);
     this.errcode = -1;
   }
 }
+
+module.exports = { SuccessModel, ErrorModel };
