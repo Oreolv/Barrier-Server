@@ -17,8 +17,8 @@ class SuccessModel extends BaseModel {
 }
 
 class ErrorModel extends BaseModel {
-  constructor(message, data, errcode) {
-    super(message, data);
+  constructor(message, errcode) {
+    super(message);
     if (!errcode) {
       this.errcode = 500;
       return;
