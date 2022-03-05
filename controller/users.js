@@ -28,15 +28,16 @@ const login = async code => {
       const newUser = `INSERT INTO users (openid) VALUES ('${openid}')`;
       await exec(newUser);
     }
-    const result = jsonwebtoken.sign(
+    const token = jsonwebtoken.sign(
       {
-        // token中暂时只写入openid
-        openid: data[0].openid,
+        openid: data[0].openid, // token中暂时只写入openid
       },
       jwtSecret,
       { expiresIn: '30d' } // zeit/ms规范
     );
-    return new SuccessModel('登陆成功', result);
+    const profile = (await exec(sql))[0];
+    profile.token = token;
+    return new SuccessModel('登陆成功', { token, profile });
   }
   return new ErrorModel('登陆失败');
 };
