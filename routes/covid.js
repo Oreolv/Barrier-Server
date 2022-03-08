@@ -1,14 +1,9 @@
 const router = require('koa-router')();
-const { getChinaData, getProvinceData } = require('../controller/covid');
+const { getAllData } = require('../controller/covid');
 router.prefix('/api/covid');
 
-router.get('/china', async function (ctx, next) {
-  const result = await getChinaData();
-  ctx.body = result;
-});
-
-router.get('/province', async function (ctx, next) {
-  const result = await getProvinceData();
+router.get('/all_data', async function (ctx, next) {
+  const result = await getAllData();
   ctx.body = result;
 });
 
