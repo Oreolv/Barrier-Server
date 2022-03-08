@@ -14,4 +14,16 @@ const getChinaData = () => {
   });
 };
 
-module.exports = { getChinaData };
+const getProvinceData = () => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path.join(__dirname, '../static/province_data.json'), function (err, data) {
+      if (err) {
+        reject(new ErrorModel('获取失败'));
+      }
+      const json = JSON.parse(data.toString());
+      resolve(new SuccessModel('获取成功', json));
+    });
+  });
+};
+
+module.exports = { getChinaData, getProvinceData };
