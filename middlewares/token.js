@@ -19,11 +19,10 @@ module.exports = function () {
       if (err.status === 401) {
         ctx.status = 401;
         ctx.body = new ErrorModel('登陆认证失败，缺少token信息', 401);
-      } else if (JSON.stringify(err).search(/invalid token/)) {
-        ctx.body = new ErrorModel('登陆认证失败，token信息错误', 402);
       } else {
         ctx.status = 500;
         ctx.body = new ErrorModel('未知错误');
+        console.log(err);
       }
     }
   };
