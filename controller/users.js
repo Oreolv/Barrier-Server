@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { exec } = require('../db/mysql');
+const users = require('../database/model/users');
 const { weappSecret, jwtSecret } = require('../config/secret');
 const { SuccessModel, ErrorModel } = require('../model/response');
 const jsonwebtoken = require('jsonwebtoken');
@@ -21,22 +21,19 @@ const getOpenID = async code => {
 const login = async code => {
   const openid = await getOpenID(code);
   if (openid) {
-    const sql = `select * from users where openid='${openid}'`;
-    const data = await exec(sql);
+    const data = await users.findAll();
     if (data.length == 0) {
       // 新用户自动注册
-      const newUser = `INSERT INTO users (openid) VALUES ('${openid}')`;
-      await exec(newUser);
+      const user = await users.create({ openid: openid });
     }
     const token = jsonwebtoken.sign(
       {
-        openid: data[0].openid, // token中暂时只写入openid
+        openid: openid, // token中暂时只写入openid
       },
       jwtSecret,
       { expiresIn: '30d' } // zeit/ms规范
     );
-    const profile = (await exec(sql))[0];
-    profile.token = token;
+    const profile = await users.findAll();
     return new SuccessModel('登陆成功', { token, profile });
   }
   return new ErrorModel('登陆失败');
