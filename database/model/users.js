@@ -28,7 +28,7 @@ const users = sequelize.define(
 );
 
 (async () => {
-  await users.sync({ force: true });
+  await users.sync({ force: false });
 })();
 
 module.exports = users;
